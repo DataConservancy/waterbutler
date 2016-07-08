@@ -25,6 +25,12 @@ class FedoraProvider(provider.BaseProvider):
 
     def __init__(self, auth, credentials, prov_settings):
         super().__init__(auth, credentials, prov_settings)
+
+        # Hack to set demo credentials
+        self.credentials['repo'] = 'http://localhost:9090/rest/'
+        self.credentials['user'] = 'user'
+        self.credentials['password'] = 'password'
+ 
         self.repo = self.credentials['repo']
         self.basic_auth_token = aiohttp.BasicAuth(self.credentials['user'], self.credentials['password']).encode()
 
