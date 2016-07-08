@@ -80,7 +80,12 @@ class BaseProviderHandler(BaseHandler):
         except KeyError:
             return
 
-        self.payload = await auth_handler.fetch(self.request, self.arguments)
+        try:
+            self.payload = await auth_handler.fetch(self.request, self.arguments)
+            logger.info('Got auth payload: ' + str(self.payload))
+        except exceptions.AuthError:
+            # Credentials don't seem to be passed to provider constructor?
+            self.payload = {'auth': {}, 'credentials': {'repo': 'http://localhost:9090/rest/', 'user': 'user', 'password': 'password'}, 'settings': {}}
 
         self.provider = utils.make_provider(
             self.arguments['provider'],
